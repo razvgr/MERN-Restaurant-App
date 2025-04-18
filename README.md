@@ -1,47 +1,124 @@
-*README*
----------------------------------------------------------------------------------------------------------------------------------------
--instalat node,mongodb community server
--git clone, adaugat fisier .env in folderul /backend (continutul fisierului este mai jos)
--cd backend, npm install
--cd ../frontend, npm install (folositi --force daca apar erori)
--configurare mongo: open mongo compass, cream baza de date cu numele restaurantDB collection name products (de exemplu)
- posibil sa fie nevoie crearea folderului c:\data\db
--copiere db: din terminal (cmd/ps) mongorestore --db restaurantDB ./db_backup (la mine a fost nevoie sa instalez aditional pachetele mongotools cli pentru mongodump/mongorestore + de adaugat folder-ul bin mongotools in PATH in caz ca nu se face automat)
--cd proj/backend apoi npm run dev, la succes apare in consola "Server pornit pe portul 5555"
--cd proj/frontend apoi npm run dev
--accesati din terminal link-ul (localhost:5173 de obicei)
--unele website-uri pot afecta preferintele browser-ului dark mode/light mode. in cazul in care site-ul nu se afiseaza corect(rosul de pe butoane (login/navbar/etc) devine palid/muted SAU toppinguri-le nu se vad spre exemplu) stergeti browser cache. Totusi, aplicatia impune light mode ,dar pot exista cazuri exceptionale. Aceasta problema are sanse foarte mici sa apara.
+# Casa Grosso Restaurant - Website
 
-.env contine:
+## Instalare și configurare
+
+### Cerințe preliminare
+- Node.js
+- MongoDB Community Server
+
+### Pași de instalare
+1. Clonați repository-ul: `git clone [url]`
+2. Adăugați fișierul `.env` în folderul `/backend` (conținutul este specificat mai jos)
+3. Instalați dependențele:
+   ```bash
+   cd backend
+   npm install
+   cd ../frontend
+   npm install  # folosiți --force dacă apar erori
+   ```
+
+### Configurare MongoDB
+1. Deschideți MongoDB Compass
+2. Creați o bază de date cu numele `restaurantDB` și collection-ul `products`
+   - Notă: Poate fi necesară crearea folderului `c:\data\db`
+3. Importați baza de date:
+   ```bash
+   mongorestore --db restaurantDB ./db_backup
+   ```
+   - Notă: Poate fi necesară instalarea pachetelor mongotools CLI pentru mongodump/mongorestore și adăugarea folderului bin mongotools în PATH
+
+### Pornirea aplicației
+1. Porniți serverul backend:
+   ```bash
+   cd proj/backend
+   npm run dev  # La succes va apărea mesajul "Server pornit pe portul 5555"
+   ```
+2. Porniți aplicația frontend:
+   ```bash
+   cd proj/frontend
+   npm run dev
+   ```
+3. Accesați aplicația în browser la link-ul afișat (de obicei `localhost:5173`)
+
+### Conținut fișier `.env`
+```
 PORT=5555
 MONGO_URI=mongodb://127.0.0.1:27017/restaurantDB
 JWT_SECRET=3b5b902d2c44603d61979b53c25f93c90badc7b8eb944c3393fcdf375821145c
-----------------------------------------------------------------------------------------------------------------------------------------
-Prezentarea site-ului:
-Am ales sa creez un site pentru restaurantul Casa Grosso. Acest site ofera functionalitati precum: rezervari in restaurant, comenzi online, feedback, panel de administrare (admin), alte functii de administrare useri/produse, pagina preluare comenzi pentru curieri.
-Sunt gestionate 3 roluri, client (logat/nelogat), admin, curier.
--Exista conturi predefinite pentru testare:
-	user:admin	pass:admin 	rol:admin
-	user:razva	pass:razva	rol:client
-	user:badea	pass:badea	rol:curier
-Site-ul se deschide pe Landing Page. Click pe "Alatura-te experientei!" pentru a ajunge pe MainPage.
-In mainpage se navigheaza folosind bara de sus. Butonul "Cos" pentru vizualizarea produselor din cos si finalizare comanda. Buton "Lacat" pentru login.
-In tab-ul oferte se regasesc diverse vouchere pentru tot cosul/ doar pentru anumite categorii de produse. Dreapta jos avem buton pentru feedback.
-In toate taburile cu produse se regasesc produsele, pentru burgeri/pizza/paste exista topping-uri accesibile prin butonul + verde.
-Navigarea pe site este intuitiva. Adaugam produse in cos, adaugam voucher pentru reducere, apoi click pe "Cos" si click pe "Comanda". Daca nu suntem logati deja vom fi dusi pe pagina de login. Dupa logare ajungem pe pagina de Comanda. Completam campurile cerute. Adresa se va scrie de forma strada iedului 4, bucuresti de exemplu pentru o estimare corecta a timpului de livrare. Restaurantul se afla pe adresa ATM, iar in functie de adresa de destinatie si adresa ATM se va calcula timpul de livrare. Am folosit serviciul Nominatim pentru geocoordonate. 
-O data trimisa comanda veti primi o alerta cu timpul de livrare.
-Din modul logat este accesibilia pagina de User (dreapta sus, iconita User). Aici clientul isi poate schimba numele, parola, poate vizualiza informatii despre cont si istoricul comenzilor (pending si delivered)
-Mentiune: pe pagina de login exista si tabul de inregistrare pentru crearea unui nou cont de client.
-Din tabul de restaurant se pot face rezervari completand formularul.
-Ne vom deloga de pe contul de client si ne logam ca admin. Interfata este similara cu cea de client, dar cu modificari precum:
-	in tabul restaurant se pot sterge rezervarile clientilor
-	in taburile oferte/bauturi/pizza/etc se pot adauga/sterge produse/vouchere
-	in dreapta jos, butonul rosu de Chat ne deschide panoul de feedback de la clienti.
-	in dreapta sus avem butonul user+ ce permite adaugarea de useri noi curieri/alti admini. Butonul rotita "Control" ne duce spre pagina de Control. Aici se pot vizualiza comenzile si userii. Se poate schimba rolul unui utilizator si sterge userul.
-Click pe butonul sageata rosu stanga sus pentru a ne intoarce pe mainpage. Delogare si apoi ne putem loga drept curier.
-Ni se deschide panoul de comenzi unde curierii pot livra comanda, click pe butonul de livrare.
-Site-ul are in spate o logica pentru rezervari: putem servi maxim 50 de clienti pe ora. Astfel, spre exemplu, intre 19:00-20:00 nu pot fi mai mult de 50 de locuri rezervate.
-in meniul initial, cel cu Noutati se poate observa un tabel cu cele mai vandute produse actualizat real-time
-Responsiveness implementat prin Drawere, accesate de obicei din meniu hamburger din navbar.
-Mecanism de gestionarea sesiunilor prin JavaWebToken, LocalStorage pentru pastrarea anumitor date.
------------------------------------------------------------------------------------------------------------------------------------------
+```
+
+### Notă privind afișarea
+Unele website-uri pot afecta preferințele browser-ului dark mode/light mode. În cazul în care site-ul nu se afișează corect (roșul de pe butoane devine palid sau toppingurile nu se văd), ștergeți cache-ul browserului. Aplicația impune light mode, dar pot exista cazuri excepționale.
+
+## Prezentarea site-ului
+
+### Descriere generală
+Am creat un site pentru restaurantul Casa Grosso care oferă următoarele funcționalități:
+- Rezervări în restaurant
+- Comenzi online
+- Feedback
+- Panel de administrare (admin)
+- Funcții de administrare pentru utilizatori/produse
+- Pagină pentru preluare comenzi (curieri)
+
+### Roluri în aplicație
+Site-ul gestionează 3 roluri:
+- Client (logat/nelogat)
+- Admin
+- Curier
+
+### Conturi predefinite pentru testare
+| Utilizator | Parolă | Rol |
+|------------|--------|-----|
+| admin      | admin  | admin |
+| razva      | razva  | client |
+| badea      | badea  | curier |
+
+### Navigare în aplicație
+
+#### Prima utilizare
+1. Site-ul se deschide pe Landing Page
+2. Click pe "Alătură-te experienței!" pentru a accesa MainPage
+3. În MainPage se navighează folosind bara superioară:
+   - Butonul "Coș" - vizualizarea produselor din coș și finalizare comandă
+   - Butonul "Lacăt" - login
+
+#### Funcționalități pentru clienți
+- În tab-ul **Oferte** se regăsesc diverse vouchere pentru coș sau categorii specifice de produse
+- În dreapta jos există un buton pentru feedback
+- În tab-urile cu produse (burgeri/pizza/paste) există topping-uri accesibile prin butonul verde +
+- Flow comandă:
+  1. Adăugați produse în coș
+  2. Aplicați un voucher pentru reducere (opțional)
+  3. Click pe "Coș" și apoi "Comandă"
+  4. După logare, completați câmpurile pentru comandă
+  5. Adresa se va scrie în formatul: `strada iedului 4, bucuresti` pentru o estimare corectă a timpului de livrare
+  6. După trimiterea comenzii veți primi o alertă cu timpul estimat de livrare
+- Din modul logat se poate accesa pagina de User (dreapta sus, iconița User):
+  - Schimbare nume și parolă
+  - Vizualizare informații cont
+  - Istoricul comenzilor (pending și delivered)
+- În tab-ul restaurant se pot face rezervări completând formularul
+
+#### Funcționalități pentru admin
+Interfața este similară cu cea de client, dar cu modificări:
+- În tab-ul restaurant se pot șterge rezervările clienților
+- În tab-urile oferte/băuturi/pizza/etc. se pot adăuga/șterge produse/vouchere
+- În dreapta jos, butonul roșu de Chat deschide panoul de feedback de la clienți
+- În dreapta sus:
+  - Butonul user+ permite adăugarea de utilizatori noi (curieri/alți admini)
+  - Butonul rotiță "Control" duce spre pagina de Control unde se pot:
+    - Vizualiza comenzile și utilizatorii
+    - Schimba rolul unui utilizator
+    - Șterge utilizatori
+
+#### Funcționalități pentru curier
+- După logare ca curier se deschide panoul de comenzi
+- Curierii pot marca comanda ca livrată apăsând butonul de livrare
+
+### Funcționalități speciale
+- **Logica de rezervări**: Restaurantul poate servi maximum 50 de clienți pe oră
+- **Top produse**: În meniul Noutăți se poate observa un tabel cu cele mai vândute produse, actualizat în timp real
+- **Responsive design**: Implementat prin Drawere, accesate din meniul hamburger din navbar
+- **Gestionarea sesiunilor**: Implementată prin JavaWebToken și LocalStorage
+- **Geolocation**: Folosind serviciul Nominatim pentru calcularea timpului de livrare bazat pe distanța dintre restaurantul situat la ATM și adresa de livrare
