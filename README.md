@@ -1,0 +1,49 @@
+*README*
+---------------------------------------------------------------------------------------------------------------------------------------
+-instalat node,mongodb community server
+-git clone, adaugat fisier .env in folderul /backend (continutul fisierului este mai jos)
+-cd backend, npm install
+-cd ../frontend, npm install (folositi --force daca apar erori)
+-configurare mongo: open mongo compass, cream baza de date cu numele restaurantDB collection name products (de exemplu)
+ posibil sa fie nevoie crearea folderului c:\data\db
+-copiere db: din terminal (cmd/ps) mongorestore --db restaurantDB ./db_backup (la mine a fost nevoie sa instalez aditional pachetele mongotools cli pentru mongodump/mongorestore + de adaugat folder-ul bin mongotools in PATH in caz ca nu se face automat)
+-cd proj/backend apoi npm run dev, la succes apare in consola "Server pornit pe portul 5555"
+-cd proj/frontend apoi npm run dev
+-accesati din terminal link-ul (localhost:5173 de obicei)
+-unele website-uri pot afecta preferintele browser-ului dark mode/light mode. in cazul in care site-ul nu se afiseaza corect(rosul de pe butoane (login/navbar/etc) devine palid/muted SAU toppinguri-le nu se vad spre exemplu) stergeti browser cache. Totusi, aplicatia impune light mode ,dar pot exista cazuri exceptionale. Aceasta problema are sanse foarte mici sa apara.
+
+.env contine:
+PORT=5555
+MONGO_URI=mongodb://127.0.0.1:27017/restaurantDB
+JWT_SECRET=3b5b902d2c44603d61979b53c25f93c90badc7b8eb944c3393fcdf375821145c
+
+
+
+Prezentarea site-ului:
+-Am ales sa creez un site pentru restaurantul Casa Grosso. Acest site ofera functionalitati precum: rezervari in restaurant, comenzi online, feedback, panel de administrare (admin), alte functii de administrare useri/produse, pagina preluare comenzi pentru curieri.
+Sunt gestionate 3 roluri, client (logat/nelogat), admin, curier.
+-Exista conturi predefinite pentru testare:
+	user:admin	pass:admin 	rol:admin
+	user:razva	pass:razva	rol:client
+	user:badea	pass:badea	rol:curier
+-Site-ul se deschide pe Landing Page. Click pe "Alatura-te experientei!" pentru a ajunge pe MainPage.
+-In mainpage se navigheaza folosind bara de sus. Butonul "Cos" pentru vizualizarea produselor din cos si finalizare comanda. Buton "Lacat" pentru login.
+-In tab-ul oferte se regasesc diverse vouchere pentru tot cosul/ doar pentru anumite categorii de produse. Dreapta jos avem buton pentru feedback.
+-In toate taburile cu produse se regasesc produsele, pentru burgeri/pizza/paste exista topping-uri accesibile prin butonul + verde.
+-Navigarea pe site este intuitiva. Adaugam produse in cos, adaugam voucher pentru reducere, apoi click pe "Cos" si click pe "Comanda". Daca nu suntem logati deja vom fi dusi pe pagina de login. Dupa logare ajungem pe pagina de Comanda. Completam campurile cerute. Adresa se va scrie de forma strada iedului 4, bucuresti de exemplu pentru o estimare corecta a timpului de livrare. Restaurantul se afla pe adresa ATM, iar in functie de adresa de destinatie si adresa ATM se va calcula timpul de livrare. Am folosit serviciul Nominatim pentru geocoordonate. 
+-O data trimisa comanda veti primi o alerta cu timpul de livrare.
+-Din modul logat este accesibilia pagina de User (dreapta sus, iconita User). Aici clientul isi poate schimba numele, parola, poate vizualiza informatii despre cont si istoricul comenzilor (pending si delivered)
+-Mentiune: pe pagina de login exista si tabul de inregistrare pentru crearea unui nou cont de client.
+-Din tabul de restaurant se pot face rezervari completand formularul.
+-Ne vom deloga de pe contul de client si ne logam ca admin. Interfata este similara cu cea de client, dar cu modificari precum:
+	in tabul restaurant se pot sterge rezervarile clientilor
+	in taburile oferte/bauturi/pizza/etc se pot adauga/sterge produse/vouchere
+	in dreapta jos, butonul rosu de Chat ne deschide panoul de feedback de la clienti.
+	in dreapta sus avem butonul user+ ce permite adaugarea de useri noi curieri/alti admini. Butonul rotita "Control" ne duce spre pagina de Control. Aici se pot vizualiza comenzile si userii. Se poate schimba rolul unui utilizator si sterge userul.
+-Click pe butonul sageata rosu stanga sus pentru a ne intoarce pe mainpage. Delogare si apoi ne putem loga drept curier.
+-Ni se deschide panoul de comenzi unde curierii pot livra comanda, click pe butonul de livrare.
+-Site-ul are in spate o logica pentru rezervari: putem servi maxim 50 de clienti pe ora. Astfel, spre exemplu, intre 19:00-20:00 nu pot fi mai mult de 50 de locuri rezervate.
+-in meniul initial, cel cu Noutati se poate observa un tabel cu cele mai vandute produse actualizat real-time
+-Responsiveness implementat prin Drawere, accesate de obicei din meniu hamburger din navbar.
+-Mecanism de gestionarea sesiunilor prin JavaWebToken, LocalStorage pentru pastrarea anumitor date.
+-----------------------------------------------------------------------------------------------------------------------------------------
