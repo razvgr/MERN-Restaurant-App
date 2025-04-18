@@ -1,6 +1,6 @@
 # Casa Grosso Restaurant - Website
 
-#Consultati si setup_web_project.txt pentru explicatii mai detaliate.
+# Consultati si setup_web_project.txt pentru explicatii mai detaliate.
 
 ## Instalare și configurare
 
