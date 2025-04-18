@@ -16,7 +16,7 @@ import {
   Flex,
   IconButton,
 } from "@chakra-ui/react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Adaugă iconițe pentru navigare
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; 
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:5555";
@@ -29,9 +29,8 @@ const DeliveryPage = () => {
 
   // State pentru paginare
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 6; // Numărul de comenzi pe pagină
+  const ordersPerPage = 6; 
 
-  // Verifică dacă utilizatorul este curier
   useEffect(() => {
     if (role !== "curier") {
       toast({
@@ -45,7 +44,6 @@ const DeliveryPage = () => {
     }
   }, [role, navigate, toast]);
 
-  // Fetch comenzile existente
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -53,7 +51,6 @@ const DeliveryPage = () => {
         const response = await axios.get(`${API_BASE_URL}/orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // Sortează comenzile descrescător după createdAt
         const sortedOrders = response.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -75,7 +72,6 @@ const DeliveryPage = () => {
     }
   }, [role, toast]);
 
-  // Funcție pentru marcarea unei comenzi ca livrată
 const handleMarkAsDelivered = async (orderId) => {
   try {
     const token = localStorage.getItem("token");
@@ -87,7 +83,6 @@ const handleMarkAsDelivered = async (orderId) => {
     const updatedOrders = orders.map((order) =>
       order._id === orderId ? { ...order, status: "delivered" } : order
     );
-    // Re-sortează comenzile după actualizare
     setOrders(
       updatedOrders.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -112,15 +107,12 @@ const handleMarkAsDelivered = async (orderId) => {
   }
 };
 
-  // Calculează comenzile afișate pe pagina curentă
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-  // Calculează numărul total de pagini
   const totalPages = Math.ceil(orders.length / ordersPerPage);
 
-  // Funcții pentru navigare între pagini
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);

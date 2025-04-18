@@ -4,7 +4,7 @@ const Product = require("../models/Product");
 
 const router = express.Router();
 
-// Configurare multer pentru upload imagini
+//upload imagini
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// 🔹 GET toate produsele
+
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -23,7 +23,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 🔹 GET produse după categorie
 router.get("/:category", async (req, res) => {
   try {
     const products = await Product.find({ category: req.params.category });
@@ -33,7 +32,6 @@ router.get("/:category", async (req, res) => {
   }
 });
 
-// 🔹 POST adăugare produs (cu imagine)
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const newProduct = new Product({
@@ -41,7 +39,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       price: req.body.price,
       description: req.body.description,
       category: req.body.category,
-      image: req.file ? req.file.path : null, // Stocăm calea imaginii
+      image: req.file ? req.file.path : null, 
     });
 
     const savedProduct = await newProduct.save();
@@ -51,7 +49,6 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// 🔹 DELETE produs
 router.delete("/:id", async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);

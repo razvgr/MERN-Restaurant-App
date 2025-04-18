@@ -8,9 +8,8 @@ import { Box, Button, Container, Heading, Text, Stack, SimpleGrid, Image, useBre
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <PageTransition> {/* Apply animation here */}
+    <PageTransition> 
       <div>
-        {/* Hero Section */}
         <Box
           as="section"
           position="relative"
@@ -28,7 +27,7 @@ const Home = () => {
               fontSize={useBreakpointValue({ base: "4xl", md: "6xl" })}
               fontWeight="bold"
               letterSpacing="widest"
-              mb={6}  // This is where I added margin bottom to create space between heading and text
+              mb={6}  
             >
               Casa Grosso
             </Heading>
@@ -37,19 +36,19 @@ const Home = () => {
               maxW="700px"
               margin="auto"
               lineHeight="1.6"
-              mb={8}  // Margin bottom added here as well to further increase space
+              mb={8}  
             >
               Răsfățați-vă cu preparate rafinate, gătite cu măiestrie din cele mai fine ingrediente. Descoperiți astăzi noul dumneavoastră fel de mâncare preferat!
             </Text>
             <Button
               colorScheme="red"
-              fontSize="xl"  // Larger font size to make the text prominent
+              fontSize="xl"  
               variant="solid"
-              borderRadius="full"  // Keeps the rounded pill shape
-              paddingX={4}  // Custom horizontal padding to make the button just wider than the text
-              paddingY={2}  // Custom vertical padding to make the button just a little taller
+              borderRadius="full"  
+              paddingX={4}  
+              paddingY={2}  
               _hover={{ bg: "red.600", transform: "scale(1.05)" }}
-              onClick={() => navigate("/main")}  // Navigate to MainPage
+              onClick={() => navigate("/main")}  
               opacity={0.8}
             >
               Alătură-te experienței

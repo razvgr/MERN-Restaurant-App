@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: light;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -69,17 +69,16 @@ button:focus-visible {
 
 /* Stilizare pentru pagination dots */
 .swiper-pagination-bullet {
-  background: red !important; /* Culoare roșie pentru puncte */
-  opacity: 0.5; /* Opacitate pentru punctele inactive */
+  background: red !important; 
+  opacity: 0.5; 
 }
 
 .swiper-pagination-bullet-active {
-  background: red !important; /* Culoare roșie pentru punctul activ */
-  opacity: 1; /* Opacitate maximă pentru punctul activ */
+  background: red !important; 
+  opacity: 1;
 }
 
-/* Stilizare pentru săgețile de navigare */
 .swiper-button-next,
 .swiper-button-prev {
-  color: red !important; /* Culoare roșie pentru săgeți */
+  color: red !important; 
 }

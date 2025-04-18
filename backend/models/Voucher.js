@@ -8,7 +8,7 @@ const voucherSchema = new mongoose.Schema({
   applicableCategories: {
     type: [String],
     enum: ["pizza", "antreuri", "paste", "burgeri", "salate", "desert", "bauturi"],
-    default: [], // Dacă este gol, voucherul se aplică tuturor categoriilor
+    default: [],
   },
   createdAt: { type: Date, default: Date.now },
 });

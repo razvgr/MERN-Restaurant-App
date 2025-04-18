@@ -33,11 +33,9 @@ const OrderPage = () => {
     JSON.parse(localStorage.getItem("selectedVoucher")) || null
   );
 
-  // State for form fields
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [notes, setNotes] = useState("");
-  // State for card details
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
@@ -56,27 +54,22 @@ const OrderPage = () => {
     }
   }, [token, navigate, toast]);
 
-  // Function to format card number (add spaces every 4 digits)
   const formatCardNumber = (value) => {
     const cleaned = value.replace(/\D/g, ""); // Remove non-digits
     const match = cleaned.match(/.{1,4}/g); // Split into groups of 4
     return match ? match.join(" ") : cleaned;
   };
 
-  // Handle card number input change
   const handleCardNumberChange = (e) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // Remove non-digits
+    const rawValue = e.target.value.replace(/\D/g, ""); 
     if (rawValue.length <= 16) {
       setCardNumber(formatCardNumber(rawValue));
     }
   };
 
-  // Function to validate card details
   const validateCardDetails = () => {
-    // Remove spaces for validation
     const cleanedCardNumber = cardNumber.replace(/\s/g, "");
 
-    // Check if card number has exactly 16 digits
     if (cleanedCardNumber.length !== 16) {
       toast({
         title: "Eroare",
@@ -88,7 +81,6 @@ const OrderPage = () => {
       return false;
     }
 
-    // Check if card number contains only zeros
     const isCardNumberValid = !/^0+$/.test(cleanedCardNumber);
     if (!isCardNumberValid) {
       toast({
@@ -101,7 +93,6 @@ const OrderPage = () => {
       return false;
     }
 
-    // Validate expiry date (format: MM/YY)
     const [month, year] = expiryDate.split("/").map((val) => parseInt(val, 10));
     if (!month || !year || month < 1 || month > 12) {
       toast({
@@ -116,8 +107,8 @@ const OrderPage = () => {
 
     // Check if the card is expired
     const currentDate = new Date();
-    const currentYear = currentDate.getFullYear() % 100; // Last two digits of the year
-    const currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JS
+    const currentYear = currentDate.getFullYear() % 100; 
+    const currentMonth = currentDate.getMonth() + 1; 
     const isExpired =
       year < currentYear || (year === currentYear && month < currentMonth);
     if (isExpired) {
@@ -263,7 +254,6 @@ const OrderPage = () => {
       return;
     }
 
-    // Validate card details if payment method is "card"
     if (paymentMethod === "card") {
       const isCardValid = validateCardDetails();
       if (!isCardValid) {
@@ -390,7 +380,6 @@ const OrderPage = () => {
             </Text>
           </Box>
 
-          {/* Form for order details */}
           <VStack spacing={4} mt={4} align="stretch">
             <Input
               placeholder="Adresa de livrare"
@@ -413,7 +402,6 @@ const OrderPage = () => {
               </Stack>
             </RadioGroup>
 
-            {/* Card Details Form with Smooth Animation */}
             <Collapse in={paymentMethod === "card"} animateOpacity>
               <Box
                 p={4}

@@ -11,7 +11,7 @@ const reservationSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date, // Sau Date, în funcție de formatul dorit
+    type: Date, 
     required: true,
   },
   time: {
@@ -24,7 +24,7 @@ const reservationSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Opțional, dacă vrei să asociezi rezervarea cu un utilizator
+    ref: "User", 
   },
   createdAt: {
     type: Date,

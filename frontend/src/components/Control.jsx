@@ -244,10 +244,10 @@ const Control = () => {
   return (
     <Box
       minH="100vh"
-      background="url('/background_wood.jpg') center/cover no-repeat fixed" // Added backgroundAttachment: fixed
+      background="url('/background_wood.jpg') center/cover no-repeat fixed" 
       py={4}
       position="relative"
-      overflow="auto" // Ensure the Box handles overflow correctly
+      overflow="auto" 
     >
       <Link to="/main">
         <IconButton
@@ -292,7 +292,7 @@ const Control = () => {
           borderRadius="xl" 
           boxShadow="xl" 
           overflow="hidden"
-          minH="calc(100vh - 200px)" // Ensure the content area has a minimum height
+          minH="calc(100vh - 200px)" 
         >
           <Tabs variant="soft-rounded" colorScheme="red" onChange={(index) => setActiveTab(index)}>
             <Box px={6} py={5} bg="gray.50" borderBottom="1px" borderColor="gray.200">

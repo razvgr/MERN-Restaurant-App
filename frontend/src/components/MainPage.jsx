@@ -52,7 +52,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import TopProductsTable from "./TopProductsTable";
 
-// URL-ul backend-ului
 const API_BASE_URL = "http://localhost:5555";
 
 const MainPage = () => {
@@ -61,7 +60,7 @@ const MainPage = () => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isCartOpen, onOpen: onCartOpen, onClose: onCartClose } = useDisclosure();
-  const { isOpen: isCourierDrawerOpen, onOpen: onCourierDrawerOpen, onClose: onCourierDrawerClose } = useDisclosure(); // Drawer pentru curieri
+  const { isOpen: isCourierDrawerOpen, onOpen: onCourierDrawerOpen, onClose: onCourierDrawerClose } = useDisclosure(); 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isClientMode, setIsClientMode] = useState(true);
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) || []);
@@ -69,11 +68,11 @@ const MainPage = () => {
   const [selectedToppings, setSelectedToppings] = useState(JSON.parse(localStorage.getItem("selectedToppings")) || {});
   const [showToppings, setShowToppings] = useState({});
   const { isOpen: isCrustModalOpen, onOpen: onCrustModalOpen, onClose: onCrustModalClose } = useDisclosure();
-  const [selectedCrust, setSelectedCrust] = useState(""); // State pentru tipul de blat selectat
-  const [currentProduct, setCurrentProduct] = useState(null); // State pentru produsul curent care se adaugă în coș
+  const [selectedCrust, setSelectedCrust] = useState(""); 
+  const [currentProduct, setCurrentProduct] = useState(null); 
   const [selectedVoucher, setSelectedVoucher] = useState(null);
-  const { isOpen: isChatOpen, onOpen: onChatOpen, onClose: onChatClose } = useDisclosure(); // Pentru chatbox
-  const [feedbackMessage, setFeedbackMessage] = useState(""); // Mesajul introdus de client
+  const { isOpen: isChatOpen, onOpen: onChatOpen, onClose: onChatClose } = useDisclosure(); 
+  const [feedbackMessage, setFeedbackMessage] = useState(""); 
   const [feedbackList, setFeedbackList] = useState([]);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -81,7 +80,6 @@ const MainPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // If the user has scrolled more than 50px from the top, set isScrolled to true
       if (window.scrollY > 50) {
         setIsScrolled(true);
       } else {
@@ -89,28 +87,22 @@ const MainPage = () => {
       }
     };
 
-    // Add scroll event listener
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // State pentru paginare în modalul de feedback
   const [currentPage, setCurrentPage] = useState(1);
-  const feedbackPerPage = 5; // Numărul de feedback-uri pe pagină
+  const feedbackPerPage = 5; 
 
-  // Calculează feedback-urile afișate pe pagina curentă
   const indexOfLastFeedback = currentPage * feedbackPerPage;
   const indexOfFirstFeedback = indexOfLastFeedback - feedbackPerPage;
   const currentFeedback = feedbackList.slice(indexOfFirstFeedback, indexOfLastFeedback);
 
-  // Calculează numărul total de pagini
   const totalPages = Math.ceil(feedbackList.length / feedbackPerPage);
 
-  // Funcții pentru navigare între pagini
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -123,14 +115,12 @@ const MainPage = () => {
     }
   };
 
-  // Resetăm pagina curentă la 1 când se închide modalul
   useEffect(() => {
     if (!isChatOpen) {
       setCurrentPage(1);
     }
   }, [isChatOpen]);
 
-  // State pentru formularul de curieri
   const [userData, setUserData] = useState({ username: "", password: "", role: "curier" });
 
   useEffect(() => {
@@ -146,17 +136,15 @@ const MainPage = () => {
 
   const [reservationError, setReservationError] = useState("");
 
-  // Funcție pentru validarea datei
   const validateDate = (date) => {
     const selectedDate = new Date(date);
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Setăm ora la 00:00:00 pentru a compara doar data
+    currentDate.setHours(0, 0, 0, 0); 
     selectedDate.setHours(0, 0, 0, 0);
 
-    return selectedDate >= currentDate; // Returnează true dacă data este astăzi sau în viitor
+    return selectedDate >= currentDate; 
   };
 
-  // State pentru rezervare
   const [reservation, setReservation] = useState({
     name: "",
     phone: "",
@@ -165,10 +153,8 @@ const MainPage = () => {
     numberOfPeople: "",
   });
 
-  // State pentru rezervări
   const [reservations, setReservations] = useState([]);
 
-  // Fetch rezervări
   useEffect(() => {
     fetchReservations();
   }, []);
@@ -184,7 +170,6 @@ const MainPage = () => {
     }
   };
 
-  // Ștergere rezervare
   const deleteReservation = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -211,7 +196,6 @@ const MainPage = () => {
     }
   };
 
-  // Fetch feedback messages (pentru admin)
   const fetchFeedback = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -231,7 +215,6 @@ const MainPage = () => {
     }
   };
 
-  // Trimite feedback (pentru clienți)
   const handleSendFeedback = async () => {
     if (!feedbackMessage.trim()) {
       toast({
@@ -263,8 +246,8 @@ const MainPage = () => {
         duration: 5000,
         isClosable: true,
       });
-      setFeedbackMessage(""); // Resetează mesajul
-      onChatClose(); // Închide chatbox-ul
+      setFeedbackMessage(""); 
+      onChatClose();
     } catch (error) {
       console.error("Eroare la trimiterea feedback-ului:", error.response?.data || error.message);
       toast({
@@ -277,7 +260,6 @@ const MainPage = () => {
     }
   };
 
-  // Fetch feedback messages when admin opens the chatbox
   useEffect(() => {
     if (isAdmin && isChatOpen) {
       fetchFeedback();
@@ -298,7 +280,7 @@ const MainPage = () => {
 
   useEffect(() => {
     fetchProducts();
-    fetchVouchers(); // Adăugăm apelul pentru vouchere
+    fetchVouchers(); 
     const token = localStorage.getItem("token");
     if (token) {
       axios
@@ -453,7 +435,6 @@ const MainPage = () => {
         console.log("Nu există categorii valide de adăugat în FormData.");
       }
 
-      // Logăm conținutul FormData pentru debugging
       console.log("Conținutul FormData:");
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}: ${pair[1]}`);
@@ -486,7 +467,6 @@ const MainPage = () => {
     }
   };
 
-  // Ștergere voucher
   const deleteVoucher = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -513,7 +493,6 @@ const MainPage = () => {
     }
   };
 
-  // Funcție pentru aplicarea unui voucher
   const applyVoucher = (voucher) => {
     setSelectedVoucher(voucher);
     toast({
@@ -526,7 +505,6 @@ const MainPage = () => {
     });
   };
 
-  // Funcție pentru eliminarea voucherului
   const removeVoucher = () => {
     setSelectedVoucher(null);
     toast({
@@ -538,7 +516,6 @@ const MainPage = () => {
     });
   };
 
-  // Funcționalitate coș
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item._id === product._id);
@@ -569,13 +546,11 @@ const MainPage = () => {
   };
 
   const addToCartWithToppings = (product) => {
-    // Verificăm dacă produsul este o pizza
     if (product.category === "pizza") {
-      setCurrentProduct(product); // Setăm produsul curent
-      setSelectedCrust(""); // Resetăm selecția tipului de blat
-      onCrustModalOpen(); // Deschidem modalul pentru selecția tipului de blat
+      setCurrentProduct(product); 
+      setSelectedCrust("");
+      onCrustModalOpen(); 
     } else {
-      // Pentru alte categorii, adăugăm direct în coș fără a cere tipul de blat
       const toppings = selectedToppings[product._id] || [];
       setCart((prevCart) => {
         const existingItem = prevCart.find((item) => item._id === product._id);
@@ -603,7 +578,6 @@ const MainPage = () => {
     }
   };
 
-  // Funcție pentru a confirma selecția tipului de blat și a adăuga în coș
   const confirmCrustSelection = () => {
     if (!selectedCrust) {
       toast({
@@ -617,7 +591,7 @@ const MainPage = () => {
     }
 
     const toppings = selectedToppings[currentProduct._id] || [];
-    const updatedToppings = [...toppings, `Blat ${selectedCrust}`]; // Adăugăm tipul de blat ca topping
+    const updatedToppings = [...toppings, `Blat ${selectedCrust}`]; 
 
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item._id === currentProduct._id);
@@ -644,7 +618,7 @@ const MainPage = () => {
       isClosable: true,
     });
 
-    onCrustModalClose(); // Închidem modalul
+    onCrustModalClose(); 
   };
 
   const removeFromCart = (productId) => {
@@ -667,36 +641,29 @@ const MainPage = () => {
   };
 
   const getCartTotal = () => {
-    // Calculează totalul inițial al coșului (fără reducere)
     const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-    // Dacă nu există voucher, returnăm totalul inițial
     if (!selectedVoucher) {
       return subtotal.toFixed(2);
     }
 
     // Calculăm subtotalul doar pentru produsele din categoriile aplicabile
     const applicableSubtotal = cart.reduce((total, item) => {
-      // Verificăm dacă voucherul se aplică pentru categoria produsului
       const isApplicable =
-        selectedVoucher.applicableCategories.length === 0 || // Se aplică tuturor categoriilor
+        selectedVoucher.applicableCategories.length === 0 || 
         selectedVoucher.applicableCategories.includes(item.category.toLowerCase());
       return isApplicable ? total + item.price * item.quantity : total;
     }, 0);
 
-    // Calculăm reducerea doar pe subtotalul aplicabil
     let discountedTotal = subtotal;
     if (selectedVoucher.valueType === "fixed") {
-      // Reducere fixă (în lei)
-      const discount = Math.min(applicableSubtotal, selectedVoucher.value); // Reducerea nu poate depăși subtotalul aplicabil
+      const discount = Math.min(applicableSubtotal, selectedVoucher.value); 
       discountedTotal = subtotal - discount;
     } else if (selectedVoucher.valueType === "percentage") {
-      // Reducere procentuală (%)
       const discount = (applicableSubtotal * selectedVoucher.value) / 100;
       discountedTotal = subtotal - discount;
     }
 
-    // Asigurăm că totalul nu este negativ
     return Math.max(0, discountedTotal).toFixed(2);
   };
 
@@ -705,7 +672,7 @@ const MainPage = () => {
     console.log("Salvăm coșul și redirecționăm:", cart, "Voucher aplicat:", selectedVoucher, "Token actual:", localStorage.getItem("token"));
     localStorage.setItem("cart", JSON.stringify(cart));
     localStorage.setItem("selectedToppings", JSON.stringify(selectedToppings));
-    localStorage.setItem("selectedVoucher", JSON.stringify(selectedVoucher)); // Salvează voucherul în localStorage
+    localStorage.setItem("selectedVoucher", JSON.stringify(selectedVoucher)); 
     navigate("/order");
   };
 
@@ -729,12 +696,10 @@ const MainPage = () => {
     navigate("/login");
   };
 
-  // Funcție pentru gestionarea rezervării
   const handleReservationSubmit = async (e) => {
     e.preventDefault();
-    setReservationError(""); // Resetăm mesajul de eroare
+    setReservationError(""); 
 
-    // Verificăm dacă data este validă
     if (!reservation.date) {
       setReservationError("Vă rugăm să selectați o dată pentru rezervare.");
       return;
@@ -792,13 +757,12 @@ const MainPage = () => {
     }
   };
 
-  // Funcție pentru înregistrarea unui curier
   const handleRegisterUser = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${API_BASE_URL}/register-user`, // Presupunem că backend-ul are un endpoint comun
+        `${API_BASE_URL}/register-user`, 
         { username: userData.username, password: userData.password, role: userData.role },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -811,8 +775,8 @@ const MainPage = () => {
         duration: 5000,
         isClosable: true,
       });
-      setUserData({ username: "", password: "", role: "curier" }); // Resetăm formularul
-      onCourierDrawerClose(); // Închidem pop-up-ul
+      setUserData({ username: "", password: "", role: "curier" }); 
+      onCourierDrawerClose(); 
     } catch (error) {
       console.error("Eroare la înregistrarea utilizatorului:", error.response?.data || error.message);
       toast({
@@ -1016,7 +980,6 @@ const MainPage = () => {
     );
   };
 
-  // Componenta VoucherList
   const VoucherList = ({ items }) => {
     if (!Array.isArray(items) || items.length === 0) {
       return <Text color="gray.500">Niciun voucher disponibil.</Text>;
@@ -1076,14 +1039,13 @@ const MainPage = () => {
                     .join(", ")}
               </Text>
 
-              {/* Adaugă butonul "Folosește voucher" pentru clienți */}
               {isClientMode && (
                 <Button
                   colorScheme="green"
                   size="sm"
                   mt={2}
                   onClick={() => applyVoucher(item)}
-                  isDisabled={selectedVoucher && selectedVoucher._id === item._id} // Dezactivează butonul dacă voucherul este deja aplicat
+                  isDisabled={selectedVoucher && selectedVoucher._id === item._id} 
                 >
                   {selectedVoucher && selectedVoucher._id === item._id
                     ? "Voucher aplicat"
@@ -1320,7 +1282,6 @@ const MainPage = () => {
       <Box
         minH="100vh"
         overflowX="hidden"
-        // Setăm fundalul condițional
         background={
           "url('/wood_table_main.jpg') center/cover no-repeat"
         }
@@ -1348,7 +1309,7 @@ const MainPage = () => {
               src="/restaurant_logo1.png"
               alt="Logo"
               h={{ base: "60px", md: "110px" }}
-              opacity={isScrolled && !isHovered ? 0 : 1} // Transparent when scrolled and not hovered
+              opacity={isScrolled && !isHovered ? 0 : 1} 
               transition="opacity 0.3s ease-in-out"
             />
           </Link>
@@ -1365,7 +1326,7 @@ const MainPage = () => {
             d="flex"
             justifyContent="center"
             alignItems="center"
-            opacity={isScrolled && !isHovered ? 0 : 1} // Transparent when scrolled and not hovered
+            opacity={isScrolled && !isHovered ? 0 : 1} 
             transition="opacity 0.3s ease-in-out"
           />
 
@@ -1376,7 +1337,7 @@ const MainPage = () => {
             justify="center"
             flexShrink={0}
             display={{ base: "none", md: "flex" }}
-            opacity={isScrolled && !isHovered ? 0 : 1} // Transparent when scrolled and not hovered
+            opacity={isScrolled && !isHovered ? 0 : 1}
             transition="opacity 0.3s ease-in-out"
           >
             {[
@@ -1418,7 +1379,7 @@ const MainPage = () => {
             justify="flex-end"
             flexShrink={0}
             display={{ base: "flex", md: "flex" }}
-            opacity={isScrolled && !isHovered ? 0 : 1} // Transparent when scrolled and not hovered
+            opacity={isScrolled && !isHovered ? 0 : 1} 
             transition="opacity 0.3s ease-in-out"
           >
             {isClientMode && localStorage.getItem("token") && (
@@ -1592,7 +1553,6 @@ const MainPage = () => {
                     <Text fontWeight="bold">
                       Subtotal: {cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)} RON
                     </Text>
-                    {/* Afișează reducerea aplicată, dacă există */}
                     {selectedVoucher && (
                       <Box mt={2}>
                         <Text color="green.500">
@@ -1602,7 +1562,6 @@ const MainPage = () => {
                             : `${selectedVoucher.value}%`}{" "}
                           reducere)
                         </Text>
-                        {/* Afișăm subtotalul aplicabil pentru voucher */}
                         {selectedVoucher.applicableCategories.length > 0 && (
                           <Text fontSize="sm" color="gray.600">
                             Se aplică pentru:{" "}
@@ -1611,7 +1570,6 @@ const MainPage = () => {
                               .join(", ")}
                           </Text>
                         )}
-                        {/* Calculăm și afișăm reducerea efectivă */}
                         {(() => {
                           const applicableSubtotal = cart.reduce((total, item) => {
                             const isApplicable =
@@ -1762,7 +1720,7 @@ const MainPage = () => {
           </DrawerContent>
         </Drawer>
 
-        <Container maxW="100%" my={6}> {/* Folosim întreaga lățime a paginii */}
+        <Container maxW="100%" my={6}> 
           <Heading fontSize="2xl" fontWeight="bold" color="red.500">
             {/* Page Title */}
           </Heading>
@@ -1772,7 +1730,7 @@ const MainPage = () => {
               direction={{ base: "column", md: "row" }}
               align={{ base: "center", md: "flex-start" }}
               justify={{ base: "center", md: "center" }}
-              gap={{ base: 4, md: 8 }} // Spațiu mai mic pe mobil, mai mare pe desktop
+              gap={{ base: 4, md: 8 }} 
               w="100%"
             >
               {/* Box-ul cu noutăți */}
@@ -1781,7 +1739,7 @@ const MainPage = () => {
                 p={6}
                 borderRadius="md"
                 boxShadow="lg"
-                maxW={{ base: "100%", md: "700px" }} // Reducem ușor lățimea pentru echilibru
+                maxW={{ base: "100%", md: "700px" }} 
                 w="100%"
                 textAlign="center"
               >
@@ -2055,7 +2013,7 @@ const MainPage = () => {
                 colorScheme="red"
                 mr={3}
                 onClick={confirmCrustSelection}
-                isDisabled={!selectedCrust} // Dezactivăm butonul dacă nu este selectat un tip de blat
+                isDisabled={!selectedCrust} 
               >
                 Confirmă
               </Button>
@@ -2066,7 +2024,6 @@ const MainPage = () => {
           </ModalContent>
         </Modal>
 
-        {/* Iconița de chat în colțul din dreapta jos */}
         <IconButton
           aria-label="Open chat"
           icon={<FaComment />}

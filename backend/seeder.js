@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Product = require("./models/Product"); // Asigură-te că ai un model pentru produse
-require("dotenv").config(); // Dacă folosești variabile de mediu
+const Product = require("./models/Product"); 
+require("dotenv").config(); 
 
 const products = [
   {
@@ -47,15 +47,14 @@ const products = [
   },
 ];
 
-// Conectare la MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log("Conectat la MongoDB...");
-    await Product.deleteMany(); // Șterge toate produsele existente
-    await Product.insertMany(products); // Adaugă produsele noi
+    await Product.deleteMany(); 
+    await Product.insertMany(products);
     console.log("Produsele au fost adăugate cu succes!");
-    mongoose.connection.close(); // Închide conexiunea
+    mongoose.connection.close(); 
   })
   .catch((error) => {
     console.error("Eroare la conectarea la MongoDB:", error);

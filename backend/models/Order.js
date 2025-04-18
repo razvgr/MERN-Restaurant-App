@@ -17,7 +17,7 @@ const orderSchema = new mongoose.Schema({
   notes: { type: String },
   status: { type: String, default: "pending" },
   createdAt: { type: Date, default: Date.now },
-  voucherId: { type: mongoose.Schema.Types.ObjectId, ref: "Voucher", default: null }, // Adaugă câmp pentru voucher
+  voucherId: { type: mongoose.Schema.Types.ObjectId, ref: "Voucher", default: null }, 
 });
 
 module.exports = mongoose.model("Order", orderSchema);

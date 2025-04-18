@@ -23,18 +23,15 @@ const Dashboard = () => {
   const toast = useToast();
   const token = localStorage.getItem("token");
 
-  // State pentru datele utilizatorului
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   
-  // State pentru paginare
-  const [displayedOrders, setDisplayedOrders] = useState([]); // Comenzile afișate
-  const [page, setPage] = useState(1); // Pagina curentă
-  const ordersPerPage = 6; // Numărul de comenzi pe pagină
+  const [displayedOrders, setDisplayedOrders] = useState([]); 
+  const [page, setPage] = useState(1); 
+  const ordersPerPage = 6; 
 
-  // Verifică dacă utilizatorul este logat
   useEffect(() => {
     if (!token) {
       toast({
@@ -51,7 +48,6 @@ const Dashboard = () => {
     }
   }, [token, navigate, toast]);
 
-  // Preluare date utilizator
   const fetchUserData = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/me`, {
@@ -71,14 +67,12 @@ const Dashboard = () => {
     }
   };
 
-  // Preluare istoric comenzi
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/orders/user`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders(response.data);
-      // Inițializează comenzile afișate cu prima pagină
       setDisplayedOrders(response.data.slice(0, ordersPerPage));
     } catch (error) {
       console.error("Eroare la preluarea comenzilor:", error);
@@ -92,7 +86,6 @@ const Dashboard = () => {
     }
   };
 
-  // Funcție pentru a încărca mai multe comenzi
   const loadMoreOrders = () => {
     const nextPage = page + 1;
     const newOrders = orders.slice(0, nextPage * ordersPerPage);
@@ -100,7 +93,6 @@ const Dashboard = () => {
     setPage(nextPage);
   };
 
-  // Modificare username
   const handleUpdateUsername = async () => {
     if (!newUsername.trim()) {
       toast({
@@ -128,7 +120,7 @@ const Dashboard = () => {
         duration: 5000,
         isClosable: true,
       });
-      fetchUserData(); // Reîmprospătează datele utilizatorului
+      fetchUserData(); 
     } catch (error) {
       console.error("Eroare la actualizarea username-ului:", error.response?.data || error.message);
       toast({
@@ -141,7 +133,6 @@ const Dashboard = () => {
     }
   };
 
-  // Modificare parolă
   const handleUpdatePassword = async () => {
     if (!newPassword.trim()) {
       toast({
@@ -169,7 +160,7 @@ const Dashboard = () => {
         duration: 5000,
         isClosable: true,
       });
-      setNewPassword(""); // Resetează câmpul parolei
+      setNewPassword(""); 
     } catch (error) {
       console.error("Eroare la actualizarea parolei:", error.response?.data || error.message);
       toast({
@@ -189,7 +180,6 @@ const Dashboard = () => {
       background="white"
     >
       <Container maxW="container.xl" py={10} position="relative">
-        {/* Buton de întoarcere în colțul din stânga sus */}
         <Link to="/main">
           <IconButton
             aria-label="Back to main"
@@ -209,7 +199,6 @@ const Dashboard = () => {
         <Heading color="red.500" mb={8} textAlign="center">
         </Heading>
 
-        {/* Secțiunea de profil și setări */}
         <Flex
           direction={{ base: "column", md: "row" }}
           gap={6}
@@ -219,13 +208,11 @@ const Dashboard = () => {
           boxShadow="lg"
           mb={8}
         >
-          {/* Setări utilizator */}
           <Box flex="1">
             <Heading size="md" color="red.500" mb={4}>
               Setări Cont
             </Heading>
             <VStack spacing={4} align="stretch">
-              {/* Modificare username */}
               <Box>
                 <Text fontWeight="bold" mb={2}>
                   Nume utilizator
@@ -249,7 +236,6 @@ const Dashboard = () => {
                 </Flex>
               </Box>
 
-              {/* Modificare parolă */}
               <Box>
                 <Text fontWeight="bold" mb={2}>
                   Parolă nouă
@@ -276,7 +262,6 @@ const Dashboard = () => {
             </VStack>
           </Box>
 
-          {/* Informații utilizator */}
           <Box flex="1" borderLeft={{ md: "1px" }} pl={{ md: 6 }}>
             <Heading size="md" color="red.500" mb={4}>
               Informații Cont
@@ -300,7 +285,6 @@ const Dashboard = () => {
           </Box>
         </Flex>
 
-        {/* Istoricul comenzilor */}
         <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
           <Heading size="md" color="red.500" mb={4}>
             Istoricul Comenzilor
@@ -363,7 +347,6 @@ const Dashboard = () => {
                   </Box>
                 ))}
               </SimpleGrid>
-              {/* Buton "Încarcă mai multe" */}
               {displayedOrders.length < orders.length && (
                 <Flex justify="center" mt={6}>
                   <Button

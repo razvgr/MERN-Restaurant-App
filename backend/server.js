@@ -14,7 +14,6 @@ const jwt = require("jsonwebtoken");
 
 const app = express();
 
-// Configurare multer pentru stocarea imaginilor
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -26,7 +25,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Creează directorul `uploads` dacă nu există
 const fs = require("fs");
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
@@ -34,13 +32,12 @@ if (!fs.existsSync("uploads")) {
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // Actualizat pentru portul frontend-ului
-  credentials: true, // Dacă folosești cookies sau auth
+  origin: "http://localhost:5173", 
+  credentials: true, 
 }));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-// Conectare la MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -49,7 +46,6 @@ mongoose
   .then(() => console.log("✅ Conectat la MongoDB"))
   .catch((err) => console.error("❌ Eroare la conectare:", err));
 
-// Middleware pentru verificare token
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   console.log("Token primit în authenticateToken:", token); // Log token
@@ -69,7 +65,6 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// 🔹 GET: Obține toate produsele
 app.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
@@ -85,7 +80,6 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// 🔹 POST: Adaugă un produs nou (protejat cu autentificare)
 app.post("/products", authenticateToken, upload.single("image"), async (req, res) => {
   try {
     const { category, name, price, description, toppings } = req.body;
@@ -105,7 +99,6 @@ app.post("/products", authenticateToken, upload.single("image"), async (req, res
   }
 });
 
-// 🔹 DELETE: Șterge un produs după ID (protejat cu autentificare)
 app.delete("/products/:id", authenticateToken, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -129,7 +122,6 @@ app.delete("/products/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// 🔹 POST: Înregistrare utilizator
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   console.log("Cerere de înregistrare de la:", req.headers.origin, { username, password });
@@ -161,7 +153,6 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// 🔹 POST: Login utilizator
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   console.log("Cerere de login de la:", req.headers.origin, { username, password });
@@ -196,7 +187,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// 🔹 GET: Obține informații despre utilizator
 app.get("/me", authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -264,18 +254,16 @@ app.post("/orders", authenticateToken, async (req, res) => {
   try {
     let finalTotal = parseFloat(total);
 
-    // Dacă există un voucher, validează-l și aplică reducerea
     if (voucherId) {
       const voucher = await Voucher.findById(voucherId);
       if (!voucher) {
         return res.status(404).json({ message: "Voucherul nu a fost găsit." });
       }
       console.log("Produse în comandă:", items);
-      // Calculează subtotalul doar pentru categoriile aplicabile
       const applicableSubtotal = items.reduce((total, item) => {
         if (!voucher || !voucher.applicableCategories) {
           console.warn("⚠️ Voucherul nu are applicableCategories:", voucher);
-          return total; // Dacă voucherul nu are applicableCategories, evită eroarea
+          return total;
         }
       
         const isApplicable =
@@ -286,21 +274,18 @@ app.post("/orders", authenticateToken, async (req, res) => {
       }, 0);
       
 
-      // Calculează subtotalul total (fără reducere)
       const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      // Aplică reducerea doar pe subtotalul aplicabil
       let discount = 0;
       if (voucher.valueType === "fixed") {
-        discount = Math.min(applicableSubtotal, voucher.value); // Reducerea nu poate depăși subtotalul aplicabil
+        discount = Math.min(applicableSubtotal, voucher.value); 
         finalTotal = subtotal - discount;
       } else if (voucher.valueType === "percentage") {
         discount = (applicableSubtotal * voucher.value) / 100;
         finalTotal = subtotal - discount;
       }
 
-      // Verifică dacă totalul trimis din frontend corespunde cu cel calculat
-      if (Math.abs(finalTotal - parseFloat(total)) > 0.1) { // Creștem toleranța de la 0.01 la 0.1
+      if (Math.abs(finalTotal - parseFloat(total)) > 0.1) { 
         console.error(`⚠️ Eroare total mismatch: Expected ${finalTotal}, received ${total}`);
         return res.status(400).json({ message: `Totalul calculat (${finalTotal}) nu corespunde cu cel trimis (${total})` });
       }
@@ -332,7 +317,7 @@ app.get("/orders", authenticateToken, async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("userId", "username")
-      .sort({ createdAt: -1 }); // Sortează descrescător după createdAt
+      .sort({ createdAt: -1 }); 
     res.status(200).json(orders);
   } catch (error) {
     console.error("Eroare la preluarea comenzilor:", error);
@@ -376,7 +361,6 @@ app.patch("/orders/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Endpoint pentru a trimite feedback (accesibil pentru clienți logati sau nelogati)
 app.post("/feedback", async (req, res) => {
   const { message } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
@@ -405,7 +389,6 @@ app.post("/feedback", async (req, res) => {
   }
 });
 
-// Endpoint pentru a prelua feedback-urile (doar pentru admin)
 app.get("/feedback", authenticateToken, async (req, res) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Acces interzis. Doar adminii pot vedea feedback-urile." });
@@ -413,8 +396,8 @@ app.get("/feedback", authenticateToken, async (req, res) => {
 
   try {
     const feedbackList = await Feedback.find()
-      .populate("userId", "username") // Populează username-ul utilizatorului, dacă există
-      .sort({ createdAt: -1 }); // Sortează descrescător după dată
+      .populate("userId", "username") 
+      .sort({ createdAt: -1 }); 
     res.status(200).json(feedbackList);
   } catch (error) {
     console.error("Eroare la preluarea feedback-urilor:", error);
@@ -426,32 +409,27 @@ app.post("/reservations", async (req, res) => {
   try {
     const { name, phone, date, time, numberOfPeople, userId } = req.body;
 
-    // Validare date
     if (!name || !phone || !date || !time || !numberOfPeople) {
       return res.status(400).json({ message: "Toate câmpurile sunt obligatorii." });
     }
 
-    // Extragem ora (ex. "18:00" din "18:30")
-    const hour = time.split(":")[0]; // Luăm doar ora (fără minute)
+    const hour = time.split(":")[0];
     const startTime = `${hour}:00`;
     const endTime = `${hour}:59`;
 
-    // Calculăm numărul total de persoane rezervate pentru intervalul orar
     const existingReservations = await Reservation.find({
       date: date,
-      time: { $gte: startTime, $lte: endTime }, // Toate rezervările între startTime și endTime
+      time: { $gte: startTime, $lte: endTime }, 
     });
 
     const totalPeople = existingReservations.reduce((sum, reservation) => sum + reservation.numberOfPeople, 0);
 
-    // Verificăm dacă adăugarea noii rezervări depășește limita de 50 de persoane
     if (totalPeople + numberOfPeople > 50) {
       return res.status(400).json({
         message: `Ne pare rău, limita de 50 de persoane pentru ora ${startTime} a fost atinsă. Te rugăm să alegi o altă oră.`,
       });
     }
 
-    // Dacă limita nu este atinsă, salvăm rezervarea
     const reservation = new Reservation({
       name,
       phone,
@@ -499,7 +477,6 @@ app.get("/reservations", authenticateToken, async (req, res) => {
   }
 });
 
-// 🔹 POST: Adaugă un voucher nou (protejat cu autentificare, doar pentru admini)
 app.post("/vouchers", authenticateToken, upload.single("image"), async (req, res) => {
   try {
     if (req.user.role !== "admin") {
@@ -511,16 +488,13 @@ app.post("/vouchers", authenticateToken, upload.single("image"), async (req, res
 
     let applicableCategories = req.body.applicableCategories || [];
 
-    // Verifică dacă e un string și transformă-l într-un array
     if (typeof applicableCategories === "string") {
       applicableCategories = applicableCategories.split(",").map(cat => cat.trim().toLowerCase());
     }
 
-    // Validăm categoriile permise
     const validCategories = ["pizza", "antreuri", "paste", "burgeri", "salate", "desert", "bauturi"];
     applicableCategories = applicableCategories.filter(cat => validCategories.includes(cat));
 
-    // Dacă nu avem categorii valide, voucherul nu se aplică nimănui (în loc să fie aplicabil la toate)
     if (applicableCategories.length === 0) {
       return res.status(400).json({ message: "Voucherul trebuie să aibă cel puțin o categorie validă." });
     }
@@ -542,7 +516,6 @@ app.post("/vouchers", authenticateToken, upload.single("image"), async (req, res
 });
 
 
-// 🔹 GET: Obține toate voucherele (accesibil pentru toți utilizatorii)
 app.get("/vouchers", async (req, res) => {
   try {
     const vouchers = await Voucher.find();
@@ -553,10 +526,8 @@ app.get("/vouchers", async (req, res) => {
   }
 });
 
-// 🔹 DELETE: Șterge un voucher după ID (protejat cu autentificare, doar pentru admini)
 app.delete("/vouchers/:id", authenticateToken, async (req, res) => {
   try {
-    // Verifică dacă utilizatorul este admin
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Acces interzis. Doar adminii pot șterge vouchere." });
     }
@@ -566,7 +537,6 @@ app.delete("/vouchers/:id", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "Voucherul nu a fost găsit." });
     }
 
-    // Șterge imaginea asociată
     const imagePath = path.join(__dirname, voucher.imageUrl);
     if (fs.existsSync(imagePath)) {
       fs.unlinkSync(imagePath);
@@ -583,21 +553,20 @@ app.delete("/vouchers/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// 🔹 GET: Obține cele mai vândute produse
 app.get("/top-products", async (req, res) => {
   try {
     const topProducts = await Order.aggregate([
-      { $unwind: "$items" }, // Descompunem array-ul de items
+      { $unwind: "$items" }, 
       {
         $group: {
-          _id: "$items.productId", // Grupăm după productId
-          name: { $first: "$items.name" }, // Luăm primul nume al produsului
-          price: { $first: "$items.price" }, // Luăm primul preț al produsului
-          sales: { $sum: "$items.quantity" }, // Calculăm totalul vânzărilor (quantity)
+          _id: "$items.productId",
+          name: { $first: "$items.name" }, 
+          price: { $first: "$items.price" },
+          sales: { $sum: "$items.quantity" },
         },
       },
-      { $sort: { sales: -1 } }, // Sortăm descrescător după vânzări
-      { $limit: 5 }, // Limităm la primele 5 produse
+      { $sort: { sales: -1 } }, 
+      { $limit: 5 }, 
     ]);
 
     res.status(200).json(topProducts);
@@ -658,7 +627,6 @@ app.put("/users/:id/role", authenticateToken, async (req, res) => {
     return res.status(400).json({ message: "Rolul trebuie să fie 'client' sau 'curier'." });
   }
 
-  // Verifică dacă ID-ul este un ObjectId valid
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ message: "ID-ul utilizatorului este invalid." });
   }
@@ -688,36 +656,30 @@ app.post("/register-user", authenticateToken, async (req, res) => {
   const { username, password, role } = req.body;
   const token = req.headers.authorization?.replace("Bearer ", "");
 
-  // Validăm că rolul este specificat și este unul dintre valorile permise
   if (!role || !["curier", "admin"].includes(role)) {
     return res.status(400).json({ message: "Rolul este obligatoriu și trebuie să fie 'curier' sau 'admin'." });
   }
 
   try {
-    // Verificăm dacă utilizatorul care face cererea este admin
     const user = await User.findById(jwt.verify(token, process.env.JWT_SECRET).id);
     if (!user || user.role !== "admin") {
       return res.status(403).json({ message: "Doar administratorii pot înregistra utilizatori." });
     }
 
-    // Verificăm dacă username-ul există deja
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "Username-ul este deja utilizat." });
     }
 
-    // Criptăm parola
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Creăm utilizatorul cu rolul specificat
     const newUser = new User({
       username,
       password: hashedPassword,
-      role, // Setăm rolul din cerere (curier sau admin)
+      role, 
     });
     await newUser.save();
 
-    // Returnăm un mesaj de succes personalizat în funcție de rol
     res.status(201).json({ message: `Contul de ${role} ${username} a fost creat cu succes!` });
   } catch (error) {
     console.error(`Eroare la înregistrarea utilizatorului (${role}):`, error);
@@ -725,7 +687,6 @@ app.post("/register-user", authenticateToken, async (req, res) => {
   }
 });
 
-// Creare cont admin preexistent la inițializare
 const initAdmin = async () => {
   const adminUsername = "admin";
   const adminPassword = "admin";
@@ -774,6 +735,6 @@ const initCourier = async () => {
 
 initCourier().catch((err) => console.error("Eroare la inițializarea curier:", err));
 
-// Pornire server
+// pornire server
 const PORT = process.env.PORT || 5555;
 app.listen(PORT, () => console.log(`🚀 Server pornit pe portul ${PORT}`));

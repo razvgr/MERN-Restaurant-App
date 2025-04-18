@@ -73,13 +73,13 @@ const LoginPage = () => {
       align="center"
       justify="center"
       minH="100vh"
-      bgImage="url('https://cdn.pixabay.com/photo/2020/03/21/02/26/pizza-4952508_1280.jpg')" // Înlocuiește cu URL-ul imaginii tale
+      bgImage="url('https://cdn.pixabay.com/photo/2020/03/21/02/26/pizza-4952508_1280.jpg')" 
       bgSize="cover"
       bgPosition="center"
       bgRepeat="no-repeat"
     >
       <Box
-        bg="rgba(240, 240, 240, 0.8)" // Fundal semi-transparent pentru lizibilitate
+        bg="rgba(240, 240, 240, 0.8)" 
         p={8}
         borderRadius="md"
         boxShadow="lg"
